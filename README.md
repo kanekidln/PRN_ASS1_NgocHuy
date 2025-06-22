@@ -1,69 +1,78 @@
-# FU Mini Hotel System
+# Hotel System
 
-This is a hotel management system built with .NET 6 and WPF, using Entity Framework Core for database access.
+Một hệ thống quản lý khách sạn được xây dựng trên nền tảng .NET 8 và WPF, sử dụng Entity Framework Core để tương tác với cơ sở dữ liệu.
 
-## Prerequisites
+## Yêu cầu cài đặt trước
 
-- .NET 8 SDK
-- SQL Server 2022
-- Visual Studio 2022 (recommended)
+* .NET 8 SDK
+* SQL Server 2022 (hoặc mới hơn)
+* Visual Studio 2022 (đề xuất)
 
-## Database Setup
+## Thiết lập cơ sở dữ liệu
 
-The application uses Entity Framework Core Code First approach to create and manage the database. The database will be automatically created when you run the application for the first time.
+Ứng dụng sử dụng EF Core theo mô hình Code First, tự động khởi tạo và cập nhật database khi chạy lần đầu.
 
-1. Make sure you have SQL Server 2022 installed and running.
-2. Check the connection string in `appsettings.json` files (located in both BusinessObjects and huy projects) and update if necessary.
-3. The default connection string is: `Server=.;Database=hotel;Trusted_Connection=True;TrustServerCertificate=True;`
+1. Đảm bảo SQL Server 2022 đang chạy.
+2. Mở file `appsettings.json` trong cả hai project `BusinessObjects` và `huy`, kiểm tra và cập nhật chuỗi kết nối nếu cần.
+3. Chuỗi kết nối mặc định:
 
-## Running the Application
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=.;Database=hotel;Trusted_Connection=True;TrustServerCertificate=True;"
+   }
+   ```
 
-1. Open the solution file `Huy-PRN.sln` in Visual Studio.
-2. Set the `huy` project as the startup project.
-3. Build the solution.
-4. Run the application.
+## Chạy ứng dụng
 
-On first run, the application will:
-1. Create the database if it doesn't exist
-2. Create all required tables
-3. Seed the database with initial data
+1. Mở file solution `Huy-PRN.sln` bằng Visual Studio.
+2. Đặt project `huy` làm startup project.
+3. Build solution.
+4. Chạy ứng dụng (F5).
 
-## Login Information
+Lần đầu chạy, ứng dụng sẽ:
 
-The application is seeded with the following user accounts:
+* Tự động tạo database (nếu chưa tồn tại).
+* Sinh các bảng cần thiết.
+* Seeding dữ liệu mẫu ban đầu.
 
-1. Email: john.doe@example.com
-   Password: password123
+## Thông tin đăng nhập mẫu
 
-2. Email: jane.smith@example.com
-   Password: password456
+* **Admin**
 
-## Features
+  * Email: `admin@FUMiniHotelSystem.com`
+  * Mật khẩu: `@@abc123@@`
 
-- Room management
-- Customer management
-- Booking reservations
-- Reporting
+* **Khách hàng**
 
-## Project Structure
+  1. `john.doe@example.com` / `password123`
+  2. `jane.smith@example.com` / `password456`
 
-- **BusinessObjects**: Contains the entity models and DbContext
-- **DataAccessObjects**: Contains the data access layer
-- **Repositories**: Contains the repository interfaces
-- **Services**: Contains the business logic
-- **QuangKietWPF**: Contains the WPF application UI
+## Tính năng chính
 
-## How to run
+* Quản lý phòng (Rooms)
+* Quản lý khách hàng (Customers)
+* Đặt phòng và lịch sử booking (Bookings)
+* Báo cáo thống kê (Reporting)
 
-1. Open file `huy.sln` by Visual Studio
-2. Build solution
-3. Run:
-dotnet ef migrations add Create
+## Cấu trúc dự án
+
+* **BusinessObjects**: Định nghĩa Entity Models và DbContext
+* **DataAccessObjects**: Lớp truy xuất dữ liệu (DAL)
+* **Repositories**: Interfaces và triển khai Repository Pattern
+* **Services**: Xử lý logic nghiệp vụ (Business Logic)
+* **huy**: Ứng dụng WPF (Giao diện người dùng)
+
+## Hướng dẫn nhanh (CLI)
+
+Trong thư mục project `huy`, bạn có thể dùng .NET CLI để tạo và áp dụng migration:
+
+```bash
+# Tạo migration
+dotnet ef migrations add InitialCreate
+# Cập nhật database
 dotnet ef database update
+# Chạy ứng dụng
 dotnet run
+```
 
-## Login information
-
-### Admin:
-- **Email**: admin@FUMiniHotelSystem.com
-- **Password**: @@abc123@@
+Sau khi hoàn thành, bạn có thể đăng nhập và trải nghiệm đầy đủ các chức năng của hệ thống.
