@@ -1,0 +1,165 @@
+<Window x:Class="huy.AdminDashboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewmodels="clr-namespace:huy.ViewModels"
+        xmlns:views="clr-namespace:huy.Views"
+        Title="Admin Dashboard - FU Mini Hotel System"
+        Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <viewmodels:AdminDashboardViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <!-- Menu Button Style (Blue theme) -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1976D2"/>
+                    <!-- hover blue700 -->
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar Menu (Blue Gradient) -->
+        <Border Grid.Column="0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#1976D2" Offset="0"/>
+                    <!-- Blue 700 -->
+                    <GradientStop Color="#0D47A1" Offset="1"/>
+                    <!-- Blue 900 -->
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <StackPanel Grid.Row="0" Margin="20,30,20,40">
+                    <TextBlock Text="Hotel Management"
+                               FontSize="22" FontWeight="Bold"
+                               Foreground="White" Margin="0,0,0,5"/>
+                    <TextBlock Text="Admin Dashboard"
+                               FontSize="14" Foreground="#BBDEFB" Margin="0,0,0,0"/>
+                    <Border Height="1" Background="#ffffff30" Margin="0,20,0,0"/>
+                </StackPanel>
+
+                <!-- Menu Items -->
+                <StackPanel Grid.Row="1" Margin="10,0">
+                    <!-- Customers -->
+                    <Button Content="Customers"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Customers">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentView}" Value="Customers">
+                                        <Setter Property="Background" Value="#2196F3"/>
+                                        <!-- Blue 500 -->
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Rooms -->
+                    <Button Content="Rooms"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Rooms">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentView}" Value="Rooms">
+                                        <Setter Property="Background" Value="#2196F3"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Bookings -->
+                    <Button Content="Bookings"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Bookings">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentView}" Value="Bookings">
+                                        <Setter Property="Background" Value="#2196F3"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Reports -->
+                    <Button Content="Reports"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Reports">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentView}" Value="Reports">
+                                        <Setter Property="Background" Value="#2196F3"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+                <!-- Logout Button -->
+                <Button Grid.Row="2" Content="Logout"
+                        Command="{Binding LogoutCommand}"
+                        Margin="10,20,10,30">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#F44336" Offset="0"/>
+                                        <GradientStop Color="#D32F2F" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Content Area -->
+        <Grid Grid.Column="1" Background="#FAFAFA">
+            <ContentControl Content="{Binding CurrentViewContent}" />
+        </Grid>
+    </Grid>
+</Window>

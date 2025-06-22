@@ -1,0 +1,68 @@
+<Window x:Class="huy.RoomDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding DialogTitle}" Height="500" Width="500"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+            <Setter Property="Padding" Value="5,3"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+        
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="Padding" Value="15,5"/>
+            <Setter Property="MinWidth" Value="80"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="{Binding DialogTitle}" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+        
+        <!-- Form -->
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Room Number:" Margin="0,5,0,0"/>
+            <TextBox Text="{Binding Room.RoomNumber, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"/>
+            
+            <TextBlock Text="Description:" Margin="0,5,0,0"/>
+            <TextBox Text="{Binding Room.RoomDescription, UpdateSourceTrigger=PropertyChanged}" 
+                     Style="{StaticResource TextBoxStyle}" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+            
+            <TextBlock Text="Max Capacity:" Margin="0,5,0,0"/>
+            <TextBox Text="{Binding Room.RoomMaxCapacity, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"/>
+            
+            <TextBlock Text="Price Per Day:" Margin="0,5,0,0"/>
+            <TextBox Text="{Binding Room.RoomPricePerDate, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"/>
+            
+            <TextBlock Text="Room Type:" Margin="0,5,0,0"/>
+            <ComboBox ItemsSource="{Binding RoomTypes}" DisplayMemberPath="RoomTypeName" 
+                      SelectedValuePath="RoomTypeID" SelectedValue="{Binding Room.RoomTypeID}" 
+                      Margin="0,5,0,10" Height="30"/>
+            
+            <TextBlock Text="Status:" Margin="0,5,0,0" Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <ComboBox SelectedIndex="{Binding Room.RoomStatus, Converter={StaticResource StatusToIndexConverter}}" 
+                      Margin="0,5,0,10" Height="30" Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}">
+                <ComboBoxItem Content="Active"/>
+                <ComboBoxItem Content="Deleted"/>
+            </ComboBox>
+            
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" TextWrapping="Wrap" Margin="0,10"/>
+        </StackPanel>
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="Save" Command="{Binding SaveCommand}" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Style="{StaticResource ButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window> 

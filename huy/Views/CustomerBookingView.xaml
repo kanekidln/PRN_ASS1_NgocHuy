@@ -1,0 +1,182 @@
+<UserControl x:Class="huy.Views.CustomerBookingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodels="clr-namespace:huy.ViewModels"
+             xmlns:converters="clr-namespace:huy.Converters">
+    
+    <UserControl.DataContext>
+        <viewmodels:CustomerBookingViewModel />
+    </UserControl.DataContext>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="Book a Room" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+        
+        <!-- Booking Form and Room List -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="350"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Available Rooms -->
+            <Border Grid.Column="0" BorderBrush="#ddd" BorderThickness="1" Margin="0,0,10,0">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Available Rooms" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    
+                    <ListView Grid.Row="1" ItemsSource="{Binding AvailableRooms}" 
+                              SelectedItem="{Binding SelectedRoom}"
+                              BorderThickness="0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#ddd" BorderThickness="1" CornerRadius="5" Padding="15" Margin="0,5" Width="500">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <TextBlock Grid.Column="0" FontSize="16" FontWeight="Bold">
+                                                <Run Text="Room "/>
+                                                <Run Text="{Binding RoomNumber}"/>
+                                                <Run Text=" - "/>
+                                                <Run Text="{Binding RoomType.RoomTypeName}"/>
+                                            </TextBlock>
+                                            
+                                            <Border Grid.Column="1" Background="#4CAF50" CornerRadius="3" Padding="8,3">
+                                                <TextBlock Text="Available" Foreground="White" FontWeight="SemiBold"/>
+                                            </Border>
+                                        </Grid>
+                                        
+                                        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                                            <TextBlock Text="{Binding RoomDescription}" TextWrapping="Wrap"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                                <TextBlock Text="Max Capacity: " FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding RoomMaxCapacity}"/>
+                                                <TextBlock Text=" persons"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        
+                                        <Grid Grid.Row="2" Margin="0,10,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <TextBlock Grid.Column="0" FontSize="16" FontWeight="Bold" Foreground="#e74c3c">
+                                                <Run Text="{Binding RoomPricePerDate, StringFormat='{}{0:C}'}"/>
+                                                <Run Text=" / night"/>
+                                            </TextBlock>
+                                            
+                                            <Button Grid.Column="1" Content="Select" Padding="15,5" 
+                                                    Background="#3498db" Foreground="White" BorderThickness="0"
+                                                    Command="{Binding DataContext.SelectRoomCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+            
+            <!-- Booking Form -->
+            <Border Grid.Column="1" BorderBrush="#ddd" BorderThickness="1" Padding="15">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500">
+                    <StackPanel>
+                        <TextBlock Text="Booking Details" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                        
+                        <TextBlock Text="Check-in Date:" Margin="0,5,0,0"/>
+                        <DatePicker SelectedDate="{Binding StartDate}" Margin="0,0,0,10"/>
+                        
+                        <TextBlock Text="Check-out Date:" Margin="0,5,0,0"/>
+                        <DatePicker SelectedDate="{Binding EndDate}" Margin="0,0,0,10"/>
+                        
+                        <Button Content="Check Availability" Command="{Binding CheckAvailabilityCommand}" 
+                                Background="#3498db" Foreground="White" Padding="10,5"
+                                BorderThickness="0" Margin="0,0,0,15"/>
+                        
+                        <Border BorderBrush="#ddd" BorderThickness="1" Padding="10" Margin="0,0,0,15"
+                                Visibility="{Binding HasSelectedRoom, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="Selected Room" FontWeight="SemiBold"/>
+                                <TextBlock Margin="0,5,0,0">
+                                    <Run Text="Room "/>
+                                    <Run Text="{Binding SelectedRoom.RoomNumber}"/>
+                                    <Run Text=" - "/>
+                                    <Run Text="{Binding SelectedRoom.RoomType.RoomTypeName}"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding SelectedRoom.RoomPricePerDate, StringFormat='{}{0:C} / night'}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Grid Margin="0,5,0,15"
+                              Visibility="{Binding HasSelectedRoom, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Duration:" Margin="0,0,10,5" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding NewBooking.BookingDuration, StringFormat='{}{0} night(s)'}"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Total Price:" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NewBooking.TotalPrice, StringFormat='{}{0:C}'}" FontWeight="Bold"/>
+                        </Grid>
+                        
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" TextWrapping="Wrap" Margin="0,0,0,15"/>
+                        
+                        <Button Content="Book Now" Command="{Binding BookNowCommand}" 
+                                Background="#4CAF50" Foreground="White" Padding="0,10"
+                                BorderThickness="0" FontWeight="Bold" FontSize="14"
+                                IsEnabled="{Binding HasSelectedRoom}"
+                                Visibility="Visible"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        
+        <!-- My Bookings Section -->
+        <Expander Grid.Row="2" Header="My Bookings" Margin="0,20,0,0" IsExpanded="True">
+            <DataGrid ItemsSource="{Binding CustomerBookings, UpdateSourceTrigger=PropertyChanged}" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      BorderThickness="1"
+                      BorderBrush="#ddd"
+                      Margin="0,10,0,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Room" Binding="{Binding Room.RoomNumber}" Width="80"/>
+                    <DataGridTextColumn Header="Room Type" Binding="{Binding Room.RoomType.RoomTypeName}" Width="120"/>
+                    <DataGridTextColumn Header="Check-in" Binding="{Binding StartDate, StringFormat='{}{0:dd/MM/yyyy}'}" Width="100"/>
+                    <DataGridTextColumn Header="Check-out" Binding="{Binding EndDate, StringFormat='{}{0:dd/MM/yyyy}'}" Width="100"/>
+                    <DataGridTextColumn Header="Duration" Binding="{Binding BookingDuration}" Width="80"/>
+                    <DataGridTextColumn Header="Total Price" Binding="{Binding TotalPrice, StringFormat='{}{0:C}'}" Width="100"/>
+                    <DataGridTextColumn Header="Status" Binding="{Binding BookingStatus, Converter={StaticResource BookingStatusConverter}}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Expander>
+    </Grid>
+</UserControl> 
